@@ -8,10 +8,6 @@ const createProductSchema = z.object({
   price: z.number().positive("Price must be a positive number"),
 });
 
-const deleteProductSchema = z.object({
-  productId: z.string().min(1, "Product ID is required"),
-});
-
 const updateProductSchema = z.object({
   name: z.string().min(1, "Name is required").optional(),
   description: z.string().optional(),
@@ -41,6 +37,8 @@ export const productController = {
         .status(201)
         .send({ message: "Product created successfully" });
     } catch (error) {
+      console.error(error);
+
       return reply.status(500).send({ error: "Failed to create product" });
     }
   },
@@ -57,6 +55,8 @@ export const productController = {
 
       reply.status(200).send({ message: "Product deleted successfully" });
     } catch (error) {
+      console.error(error);
+
       return reply.status(500).send({ error: "Failed to delete product" });
     }
   },
@@ -88,6 +88,8 @@ export const productController = {
         .status(200)
         .send({ message: "Product updated successfully" });
     } catch (error) {
+      console.error(error);
+
       return reply.status(500).send({ error: "Failed to update product" });
     }
   },
@@ -95,8 +97,11 @@ export const productController = {
   async getProducts(req: FastifyRequest, reply: FastifyReply) {
     try {
       const products = await productService.getProducts();
+
       return reply.status(200).send(products);
     } catch (error) {
+      console.error(error);
+
       return reply.status(500).send({ error: "Failed to fetch products" });
     }
   },
@@ -116,6 +121,8 @@ export const productController = {
 
       return reply.status(200).send(product);
     } catch (error) {
+      console.error(error);
+
       return reply.status(500).send({ error: "Failed to fetch product" });
     }
   },

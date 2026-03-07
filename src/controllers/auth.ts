@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
-import { prisma } from "../lib/prisma";
 import bcrypt from "bcrypt";
+import { userService } from "../services/user";
 
 const registerSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -29,18 +29,14 @@ export const authController = {
     const hashPassword = await bcrypt.hash(password, 10);
 
     try {
-      await prisma.user.create({
-        data: {
-          name,
-          email,
-          password: hashPassword,
-        },
-      });
+      await userService.createUser(name, email, hashPassword);
 
       return reply.status(200).send({
         message: "User registered successfully",
       });
-    } catch (err) {
+    } catch (error) {
+      console.error(error);
+
       return reply.status(500).send({
         error: "Failed to create user",
       });
@@ -57,13 +53,9 @@ export const authController = {
     }
 
     const { email, password } = parseResult.data;
-  
+
     try {
-      const user = await prisma.user.findUnique({
-        where: {
-          email,
-        },
-      });
+      const user = await userService.getUserByEmail(email);
 
       if (!user) {
         return reply.status(401).send({
@@ -96,7 +88,9 @@ export const authController = {
       return reply.send({
         message: "Login successful",
       });
-    } catch (err) {
+    } catch (error) {
+      console.error(error);
+
       return reply.status(500).send({
         error: "Failed to login",
       });
