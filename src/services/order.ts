@@ -34,10 +34,13 @@ export const orderService = {
         0,
       );
 
+      const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
+
       const order = await tx.order.create({
         data: {
           userId,
           amount,
+          expiresAt,
           orderItems: {
             create: cart.cartItems.map((item) => ({
               productId: item.product.id,

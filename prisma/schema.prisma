@@ -50,14 +50,15 @@ model CartItem {
 }
 
 model Order {
-  id     String      @id @default(uuid())
-  userId String
-  amount Float
-  status OrderStatus @default(PENDING)
+  id        String      @id @default(uuid())
+  userId    String
+  amount    Float
+  status    OrderStatus @default(PENDING)
+  expiresAt DateTime
 
   user       User        @relation(fields: [userId], references: [id])
   orderItems OrderItem[]
-  payment   Payment?
+  payment    Payment?
 }
 
 model OrderItem {
