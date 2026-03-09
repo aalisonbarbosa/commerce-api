@@ -1,51 +1,45 @@
+import { Prisma } from "@prisma/client";
 import { prisma } from "../lib/prisma";
 
 interface Product {
   name: string;
-  description?: string;
+  description?: string | null;
   price: number;
+  quantity: number;
   userId: string;
 }
 
 export const productService = {
   async createProduct(data: Product) {
-    try {
-      return await prisma.$transaction(async (tx) => {
-        const user = await tx.user.findFirst({
-          where: { id: data.userId },
-        });
-
-        if (!user?.role || user.role !== "admin") {
-          throw new Error("Unauthorized");
-        }
-
-        return await tx.product.create({ data });
+    return prisma.$transaction(async (tx) => {
+      const user = await tx.user.findFirst({
+        where: { id: data.userId },
       });
-    } catch (error) {
-      throw error;
-    }
+
+      if (!user?.role || user.role !== "admin") {
+        throw new Error("Unauthorized");
+      }
+
+      return tx.product.create({ data });
+    });
   },
 
   async deleteProduct(productId: string, userId: string) {
-    try {
-      return await prisma.$transaction(async (tx) => {
-        const user = await tx.user.findFirst({
-          where: { id: userId },
-        });
-
-        if (!user?.role || user.role !== "admin") {
-          throw new Error("Unauthorized");
-        }
-
-        return await tx.product.delete({
-          where: {
-            id: productId,
-          },
-        });
+    return prisma.$transaction(async (tx) => {
+      const user = await tx.user.findFirst({
+        where: { id: userId },
       });
-    } catch (error) {
-      throw error;
-    }
+
+      if (!user?.role || user.role !== "admin") {
+        throw new Error("Unauthorized");
+      }
+
+      return tx.product.delete({
+        where: {
+          id: productId,
+        },
+      });
+    });
   },
 
   async updateProduct(
@@ -53,43 +47,48 @@ export const productService = {
     data: Partial<Product>,
     userId: string,
   ) {
-    try {
-      return await prisma.$transaction(async (tx) => {
-        const user = await tx.user.findFirst({
-          where: { id: userId },
-        });
-
-        if (!user?.role || user.role !== "admin") {
-          throw new Error("Unauthorized");
-        }
-
-        return await tx.product.update({
-          where: {
-            id: productId,
-          },
-          data,
-        });
+    return prisma.$transaction(async (tx) => {
+      const user = await tx.user.findFirst({
+        where: { id: userId },
       });
-    } catch (error) {
-      throw error;
-    }
+
+      if (!user?.role || user.role !== "admin") {
+        throw new Error("Unauthorized");
+      }
+
+      return tx.product.update({
+        where: {
+          id: productId,
+        },
+        data,
+      });
+    });
+  },
+
+  async decrementStock(
+    tx: Prisma.TransactionClient,
+    productId: string,
+    quantity: number,
+  ) {
+    return tx.product.update({
+      where: {
+        id: productId,
+      },
+      data: {
+        quantity: {
+          decrement: quantity,
+        },
+      },
+    });
   },
 
   async getProducts() {
-    try {
-      return await prisma.product.findMany();
-    } catch (error) {
-      throw error;
-    }
+    return prisma.product.findMany();
   },
 
   async getProductById(id: string) {
-    try {
-      return await prisma.product.findUnique({
-        where: { id },
-      });
-    } catch (error) {
-      throw error;
-    }
+    return prisma.product.findUnique({
+      where: { id },
+    });
   },
 };

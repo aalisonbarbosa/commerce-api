@@ -6,6 +6,7 @@ const createProductSchema = z.object({
   name: z.string().min(1, "Name is required"),
   description: z.string(),
   price: z.number().positive("Price must be a positive number"),
+  quantity: z.number().min(1, { message: "Quantity must be at least 1" }),
 });
 
 const updateProductSchema = z.object({
@@ -22,7 +23,7 @@ export const productController = {
       return reply.status(400).send({ error: "Validation failed" });
     }
 
-    const { name, description, price } = parseResult.data;
+    const { name, description, price, quantity } = parseResult.data;
     const { id: userId } = req.user;
 
     try {
@@ -30,6 +31,7 @@ export const productController = {
         name,
         description,
         price,
+        quantity,
         userId,
       });
 

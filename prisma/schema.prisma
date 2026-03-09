@@ -7,14 +7,14 @@ datasource db {
 }
 
 model User {
-  id       String @id @default(uuid())
+  id       String  @id @default(uuid())
   name     String
-  email    String @unique
+  email    String  @unique
   password String
   role     String?
 
   products Product[]
-  cart     Cart[]
+  cart     Cart?
   orders   Order[]
 }
 
@@ -22,6 +22,7 @@ model Product {
   id          String  @id @default(uuid())
   name        String
   description String?
+  quantity    Int
   price       Float
   userId      String
 
@@ -32,7 +33,7 @@ model Product {
 
 model Cart {
   id     String @id @default(uuid())
-  userId String
+  userId String @unique
 
   user      User       @relation(fields: [userId], references: [id])
   cartItems CartItem[]
@@ -49,18 +50,44 @@ model CartItem {
 }
 
 model Order {
-  id     String @id @default(uuid())
+  id     String      @id @default(uuid())
   userId String
+  amount Float
+  status OrderStatus @default(PENDING)
 
   user       User        @relation(fields: [userId], references: [id])
   orderItems OrderItem[]
+  payment   Payment?
 }
 
 model OrderItem {
   id        String @id @default(uuid())
   orderId   String
   productId String
+  quantity  Int
+  unitPrice Float
 
   order   Order   @relation(fields: [orderId], references: [id])
   product Product @relation(fields: [productId], references: [id])
+}
+
+model Payment {
+  id      String        @id @default(uuid())
+  orderId String        @unique
+  amount  Float
+  status  PaymentStatus @default(INITIATED)
+
+  order Order @relation(fields: [orderId], references: [id])
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  CANCELLED
+}
+
+enum PaymentStatus {
+  INITIATED
+  CONFIRMED
+  FAILED
 }
