@@ -13,6 +13,7 @@ const updateProductSchema = z.object({
   name: z.string().min(1, "Name is required").optional(),
   description: z.string().optional(),
   price: z.number().positive("Price must be a positive number").optional(),
+  quantity: z.number().positive("Quantity must be at least 1").optional(),
 });
 
 export const productController = {
@@ -77,12 +78,12 @@ export const productController = {
 
     const { id: userId } = req.user;
 
-    const { name, description, price } = parseResult.data;
+    const { name, description, price, quantity } = parseResult.data;
 
     try {
       await productService.updateProduct(
         productId,
-        { name, description, price },
+        { name, description, price, quantity },
         userId,
       );
 

@@ -51,11 +51,7 @@ export const paymentService = {
       }
 
       for (const item of cart.cartItems) {
-        await productService.decrementStock(
-          tx,
-          item.product.id,
-          item.quantity,
-        );
+        await productService.decrementStock(tx, item.product.id, item.quantity);
       }
 
       await tx.cartItem.deleteMany({

@@ -7,6 +7,8 @@ declare module "fastify" {
 }
 
 import "@fastify/jwt";
+import { FastifyInstance } from "fastify";
+import { ZodTypeProvider } from "fastify-type-provider-zod";
 
 declare module "@fastify/jwt" {
   interface FastifyJWT {
@@ -20,3 +22,11 @@ declare module "@fastify/jwt" {
     };
   }
 }
+
+export type FastifyTypedInstance = FastifyInstance<
+  RawServerDefault,
+  RawRequestDefaultExpression,
+  RawReplyDefaultExpression,
+  FastifyBaseLogger,
+  ZodTypeProvider
+>;

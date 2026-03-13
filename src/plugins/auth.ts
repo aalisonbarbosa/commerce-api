@@ -4,21 +4,24 @@ import fastifyPlugin from "fastify-plugin";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 export default fastifyPlugin(async (fastify: FastifyInstance) => {
-    fastify.register(fastifyCookie);
+  fastify.register(fastifyCookie);
 
-    fastify.register(fastifyJwt, {
-        secret: "super_secret_key",
-        cookie: {
-            cookieName: "token",
-            signed: false
-        }
-    });
+  fastify.register(fastifyJwt, {
+    secret: "super_secret_key",
+    cookie: {
+      cookieName: "token",
+      signed: false,
+    },
+  });
 
-    fastify.decorate("authenticate", async (request: FastifyRequest, reply: FastifyReply) => {
-        try {
-            await request.jwtVerify();
-        } catch (err) {
-            reply.send(err);
-        }
-    });
+  fastify.decorate(
+    "authenticate",
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      try {
+        await request.jwtVerify();
+      } catch (err) {
+        reply.send(err);
+      }
+    },
+  );
 });
