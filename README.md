@@ -86,32 +86,32 @@ PostgreSQL
 
 ```
 src
- ├ controllers
- │   ├ auth.ts
- │   ├ product.ts
- │   ├ cart.ts
- │   └ order.ts
- │
- ├ services
- │   ├ user.ts
- │   ├ product.ts
- │   ├ cart.ts
- │   ├ order.ts
- │   └ payment.ts
- │
- ├ routes
- │   ├ auth.ts
- │   ├ products.ts
- │   ├ cart.ts
- │   └ orders.ts
- │
- ├ plugins
- │   └ auth.ts
- │
- ├ lib
- │   └ prisma.ts
- │
- └ server.ts
+├── controllers
+│   ├── auth.ts
+│   ├── cart.ts
+│   ├── order.ts
+│   └── product.ts
+├── jobs
+│   ├── cancelExpiredOrders.ts
+│   └── scheduler.ts
+├── lib
+│   └── prisma.ts
+├── plugins
+│   └── auth.ts
+├── routes
+│   ├── auth.ts
+│   ├── cart.ts
+│   ├── order.ts
+│   └── product.ts
+├── services
+│   ├── cart.ts
+│   ├── order.ts
+│   ├── payment.ts
+│   ├── product.ts
+│   └── user.ts
+├── types
+│   └── fastify.d.ts
+└── index.ts
 ```
 
 ---
