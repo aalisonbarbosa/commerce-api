@@ -216,13 +216,13 @@ Bearer SEU_TOKEN
 Clone o projeto:
 
 ```
-git clone https://github.com/seuusuario/ecommerce-api
+git clone https://github.com/aalisonbarbosa/commerce-api
 ```
 
 Entre na pasta:
 
 ```
-cd ecommerce-api
+cd commerce-api
 ```
 
 Instale as dependências:
