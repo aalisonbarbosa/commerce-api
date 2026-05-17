@@ -25,7 +25,7 @@ fastify.register(fastifyCors, { origin: "*" });
 fastify.register(fastifySwagger, {
   openapi: {
     info: {
-      title: "Commerce API",
+      title: "Ecommerce API",
       description: "API de e-commerce com autenticação de usuários, gerenciamento de produtos, carrinho de compras, criação de pedidos e confirmação de pagamento.",
       version: "1.0.0",
     },
